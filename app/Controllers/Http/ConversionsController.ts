@@ -8,26 +8,20 @@ import Database from '@ioc:Adonis/Lucid/Database'
 // toUnit --> Unidade para qual queira converter o valor desejado (no caso de km, para milhas)
 // value --> é o valor que vc converte da unidade de origem de destino
 export default class ConversionsController {
-  public async show({ response }: HttpContextContract) {
-    const unidade = await Database.query().from('conversions').distinct('from_unit', 'to_unit')
-    const removerArray = unidade.shift()
+  public async show({ request, response }: HttpContextContract) {
+    const searchDatabase = await Database.query()
+      .from('conversions')
+      .distinct('from_unit', 'to_unit')
+    const unidades = searchDatabase.shift() // tirar o array, já que searchDatabase é um array
 
-    return response.json(removerArray)
+    return response.json(unidades)
   }
 
-  public async store({ response }: HttpContextContract) {
-    const unidade = await Conversion.create({
-      from_unit: 'km',
-      to_unit: 'miles',
-      value: 32,
-    })
-
+  public async store({ request, response }: HttpContextContract) {
+    const conversao = await request.validate(ConversionValidator)
     const miles = 1.609
-    const result = unidade.value / miles
-    // const { value } = await request.validate(ConversionValidator)
-    // const miles = 1.609
-    // const form = value / miles
-    // return response.status(200).json({ 'Resultado de Km para milhas:': form })
+    const result = conversao.value / miles
+
     return response.json({ 'Km para milhas': result })
   }
 }
