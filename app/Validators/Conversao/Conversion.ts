@@ -24,8 +24,8 @@ export default class ConversionValidator {
    *    ```
    */
   public schema = schema.create({
-    from_unit: schema.string({ trim: true }),
-    to_unit: schema.string({ trim: true }),
+    fromUnit: schema.string({ trim: true }),
+    toUnit: schema.string({ trim: true }),
     value: schema.number(),
   })
 

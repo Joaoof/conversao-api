@@ -6,10 +6,10 @@ export default class Conversion extends BaseModel {
   public id: number
 
   @column()
-  public from_unit: string
+  public fromUnit: string
 
   @column()
-  public to_unit: string
+  public toUnit: string
 
   @column()
   public value: number
