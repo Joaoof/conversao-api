@@ -24,8 +24,8 @@ export default class ConversionValidator {
    *    ```
    */
   public schema = schema.create({
-    from_unit: schema.string({ trim: true }, [rules.equalTo('Km')]),
-    to_unit: schema.string({ trim: true }, [rules.equalTo('miles')]),
+    from_unit: schema.string({ trim: true }),
+    to_unit: schema.string({ trim: true }),
     value: schema.number(),
   })
 

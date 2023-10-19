@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Conversion from 'App/Models/Conversion'
-import ConversionValidator from 'App/Validators/ConversionValidator'
+import Conversion from 'App/Models/Conversao/Conversion'
+import ConversionValidator from 'App/Validators/Conversao/Conversion'
 import { DateTime } from 'luxon'
 import Database from '@ioc:Adonis/Lucid/Database'
 
@@ -9,19 +9,24 @@ import Database from '@ioc:Adonis/Lucid/Database'
 // value --> é o valor que vc converte da unidade de origem de destino
 export default class ConversionsController {
   public async show({ request, response }: HttpContextContract) {
-    const searchDatabase = await Database.query()
-      .from('conversions')
-      .distinct('from_unit', 'to_unit')
-    const unidades = searchDatabase.shift() // tirar o array, já que searchDatabase é um array
+    const conversion = await Conversion.query().from('conversions').distinct('from_unit', 'to_unit')
+    const conversionJSON = conversion.map((post) => post.serialize())
 
-    return response.json(unidades)
+    return response.json(conversionJSON)
   }
 
   public async store({ request, response }: HttpContextContract) {
     const conversao = await request.validate(ConversionValidator)
+    const lbs = 2.2046
     const miles = 1.609
-    const result = conversao.value / miles
+    if (!conversao) {
+      response.json({ message: 'Digite sua unidade' })
+    }
+    const formula = {
+      lbs: conversao.value * lbs,
+      miles: conversao.value / miles,
+    }
 
-    return response.json({ 'Km para milhas': result })
+    return response.json(`${conversao.from_unit} para ${conversao.to_unit}: ${formula.miles} `)
   }
 }

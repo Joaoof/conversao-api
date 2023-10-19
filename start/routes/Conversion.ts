@@ -20,9 +20,5 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
-
-Route.post('/convert', 'ConversionsController.store')
-Route.get('/list', 'ConversionsController.show')
+Route.post('/convert', 'Conversao/Conversions.store')
+Route.get('/list', 'Conversao/Conversions.show')
