@@ -1,3 +1,4 @@
+import Application from '@ioc:Adonis/Core/Application'
 /**
  * Config source: https://git.io/JesV9
  *
@@ -6,7 +7,7 @@
  */
 
 import Env from '@ioc:Adonis/Core/Env'
-import Application from '@ioc:Adonis/Core/Application'
+
 import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
 const databaseConfig: DatabaseConfig = {
@@ -42,7 +43,7 @@ const databaseConfig: DatabaseConfig = {
       pool: {
         afterCreate: (conn, cb) => {
           conn.run('PRAGMA foreign_keys=true', cb)
-        }
+        },
       },
       migrations: {
         naturalSort: true,
@@ -51,8 +52,7 @@ const databaseConfig: DatabaseConfig = {
       healthCheck: false,
       debug: false,
     },
-
-  }
+  },
 }
 
 export default databaseConfig

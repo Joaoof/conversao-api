@@ -1,5 +1,7 @@
-import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
+import { CustomMessages, rules, schema } from '@ioc:Adonis/Core/Validator'
+
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class ConversionValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -22,11 +24,26 @@ export default class ConversionValidator {
    *       rules.unique({ table: 'users', column: 'email' }),
    *     ])
    *    ```
+   *
    */
   public schema = schema.create({
-    fromUnit: schema.string({ trim: true }),
-    toUnit: schema.string({ trim: true }),
-    value: schema.number(),
+    fromUnit: schema.string({ trim: true }, [
+      rules.required(),
+      rules.exists({
+        table: 'conversions',
+        column: 'fromUnit',
+        caseInsensitive: true,
+      }),
+    ]),
+    toUnit: schema.string({ trim: true }, [
+      rules.required(),
+      rules.exists({
+        table: 'conversions',
+        column: 'toUnit',
+        caseInsensitive: false,
+      }),
+    ]),
+    value: schema.number([rules.required()]),
   })
 
   /**
